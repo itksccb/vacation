@@ -26,8 +26,8 @@ function main() {
 		var vacancy = JSON.parse(ARBody);
         
         // untuk test
-        vacancy.start = '2018-03-01';
-        vacancy.end = '2018-03-02';
+        // vacancy.start = '2018-03-01';
+        // vacancy.end = '2018-03-02';
         
 		const now 	= new Date(); 
 		const start	= new Date(vacancy.start);
@@ -36,9 +36,9 @@ function main() {
 		re 			= re.replace("{{start}}", formatDate(start));
 		re 			= re.replace("{{end}}", formatDate(end));
 
-//		if ( start <= now && now < end ) {
+		if ( start <= now && now < end ) {
 			autoReply(vacancy,re);    
-//		}
+		}
 	}
 }
 
