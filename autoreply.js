@@ -1,6 +1,6 @@
 function main() {
-	let ARBody = '';
-	let err = {msg: '', title:''};
+	var ARBody = '';
+	var err = {msg: '', title:''};
 	try {
 		ARBody = UrlFetchApp.fetch('https://it.ksccb.com/vacation/vacation.json');
 	}catch(e) {
@@ -20,32 +20,35 @@ function main() {
 		}
 	}
 
-
 	if (ARBody.length === 1){
 		MailApp.sendEmail("risiyanto@ksccb.com, yuda@ksccb.com", err.title, err.msg);
 	}else {
-		let vacancy = JSON.parse(ARBody);
-
+		var vacancy = JSON.parse(ARBody);
+        
+        // untuk test
+        vacancy.start = '2018-03-01';
+        vacancy.end = '2018-03-02';
+        
 		const now 	= new Date(); 
 		const start	= new Date(vacancy.start);
 		const end	= new Date(vacancy.end);
-  		let re 		= vacancy.re.split("<br>").join("\n");
+  		var re 		= vacancy.re.split("<br>").join("\n");
 		re 			= re.replace("{{start}}", formatDate(start));
 		re 			= re.replace("{{end}}", formatDate(end));
 
-		if ( start <= now && now < end ) {
+//		if ( start <= now && now < end ) {
 			autoReply(vacancy,re);    
-		}
+//		}
 	}
 }
 
   
 function autoReply(vacancy,re) {
-	const after	= vacancy.start.split("-").join("/");
+	const after		= vacancy.start.split("-").join("/");
 	const before	= vacancy.end.split("-").join("/");
 
 	const filter="in:trash is:read -from:ksccb.com,-no_reply,-noreply,-no-reply,-notification after:"+after+" before:"+before;
-	  
+	Logger.log(filter);
 	const threads = GmailApp.search(filter);
 
 	const label = GmailApp.getUserLabelByName("Auto Replied");
@@ -56,7 +59,7 @@ function autoReply(vacancy,re) {
 		label = GmailApp.getUserLabelByName("Auto Replied");
 	}
   
-	for (let i = 0; i < threads.length; i++) {
+	for (var i = 0; i < threads.length; i++) {
 	    // Ignore email conversations
 	    if (threads[i].getMessageCount() == 1) {          
 			var msg = threads[i].getMessages()[0];
